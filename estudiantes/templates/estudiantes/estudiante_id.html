@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1> Estudiante {{ estudiante.firstName  }} </h1>
+
+        {% if estudiante %}
+            <ul>
+                <li>  {{ estudiante.firstName }}   </li>
+                <li>  {{ estudiante.lastName }}   </li>
+                <li>  {{ estudiante.email }}   </li>
+                <li>  {{ estudiante.age }}   </li>
+                <li>  {{ estudiante.idNumber }}   </li>
+                <li>  {{ estudiante.city }}   </li>
+                <li>  {{ estudiante.score }}   </li>
+                <li>  {{ estudiante.approved }}   </li>
+
+
+            </ul>
+        {% else %}
+            <p> No existe el estudiante con este id<</p>
+        {% endif %}
+
+
+
+</body>
+</html>

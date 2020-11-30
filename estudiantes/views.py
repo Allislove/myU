@@ -9,7 +9,6 @@ from estudiantes.serializers import EstudianteSerializer
 
 
 #Decorador es api view
-
 @api_view(['GET', 'POST', 'DELETE', 'PUT'])
 def estudiantes(request):
     if request.method == 'GET':
@@ -24,7 +23,6 @@ def estudiantes(request):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=estudiante.errors)
-
         # print("Aqui empieza el error"),
         # Estudiante.objects.create(
             # # print("Aqui empieza el error"),
@@ -48,7 +46,11 @@ def estudiantes(request):
             # approved=request.POST['approved']
 
         # )
+
         return Response(status=status.HTTP_201_CREATED)
+    if request.method == 'DELETE':
+        borrar_estudiante = Estudiante.objects.get(id=id).delete()
+        return Response({'message': '{} Se ha borrado el estudiante con exito!'}, status=status.HTTP_204_NO_CONTENT)
 
 
 

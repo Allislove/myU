@@ -59,18 +59,18 @@ def clases(request):
 
 
 @api_view(['PUT'])
-def clases(request, id):
+def clase(request, id):
     try:
-        clase = Clase.objects.create(id=id)
+        clase = Clase.objects.get(id=id)
     except Clase.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        print("Aqui surge un error al intentar obtener la data")
+        print("identificandoErrs:Aqui surge un error al intentar obtener la data")
         serializer = AllClases(clase, many=True, data=request.data)
         #Sera un diccionario
         data = {}
-        print("Aqui surge un error 2 al intentar obtener la data")
+        print("identificandoErrs:Aqui surge un error 2 al intentar obtener la data")
         if serializer.is_valid():
             serializer.save()
             data["succes"] = "Se ha actualizado con exito"

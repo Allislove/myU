@@ -4,7 +4,7 @@ from estudiantes.views import estudiantes, get_estudiante
 urlpatterns = [
     path('', estudiantes)
 
-]
+] 
 
 
 # urlpatterns = [

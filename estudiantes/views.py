@@ -9,7 +9,7 @@ from estudiantes.serializers import EstudianteSerializer
 
 
 #Decorador es api view
-@api_view(['GET', 'POST', 'DELETE', 'PUT'])
+@api_view(['GET', 'POST'])
 def estudiantes(request):
     if request.method == 'GET':
         estudiantes = Estudiante.objects.all()
@@ -20,48 +20,39 @@ def estudiantes(request):
     if request.method == 'POST':
         estudiante = EstudianteSerializer(data=request.data)
         if estudiante.is_valid():
+            estudiante.save()
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=estudiante.errors)
-        # print("Aqui empieza el error"),
-        # Estudiante.objects.create(
-            # # print("Aqui empieza el error"),
-            # firstName = 'firstName' in request.POST,
-            # lastName ='firstName' in request.POST,
-            # email ='firstName' in request.POST,
-            # age ='firstName' in request.POST,
-            # idNumber ='firstName' in request.POST,
-            # city ='firstName' in request.POST,
-            # score ='firstName' in request.POST,
-            # approved ='firstName' in request.POST,
-            # desde aqui me acepta la solicitud pero me da puros errores false
-
-            # firstName=request.POST['firstName'],
-            # lastName=request.POST['lastName'],
-            # email=request.POST['email'],
-            # age=request.POST['age'],
-            # idNumber=request.POST['idNumber'],
-            # city=request.POST['city'],
-            # score=request.POST['score'],
-            # approved=request.POST['approved']
-
-        # )
-
         return Response(status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'DELETE'])
+def estudiante(request, estudiante_id):
+
+    try:
+        estudiante = Estudiante.objects.get(id=estudiante_id)
+    except Estudiante.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serialized = EstudianteSerializer(estudiante)
+        return Response(status=status.HTTP_200_OK, data=serialized.data)
+        #serializo los datos
     if request.method == 'DELETE':
-        borrar_estudiante = Estudiante.objects.get(id=id).delete()
-        return Response({'message': '{} Se ha borrado el estudiante con exito!'}, status=status.HTTP_204_NO_CONTENT)
+        estudiante.delete()
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response({'No se ha podido eliminar la clase '}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-# def estudiantes(request):
-#     estudiantes = Estudiante.objects.all()
-#
-#     return render(request, 'estudiantes/lista.html', {'estudiantes': estudiantes})
 
 
-def get_estudiante(request, estudiante_id):
-    estudiante = Estudiante.objects.get(id=estudiante_id)
-    return render(request, 'estudiantes/estudiante_id.html', {'estudiante': estudiante})
+
+
+
+# def get_estudiante(request, estudiante_id):
+#     estudiante = Estudiante.objects.get(id=estudiante_id)
+#     return render(request, 'estudiantes/estudiante_id.html', {'estudiante': estudiante})
 
 

@@ -2,9 +2,12 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from clases.serializers import ClaseSerializer, AllClases
+from clases.serializers import ClaseSerializer, AllClasesSerializer
 from clases.models import Clase
 from estudiantes.models import Estudiante
+from rest_framework.parsers import JSONParser
+import json
+
 
 
 # Create your views here.
@@ -27,87 +30,46 @@ def clases(request):
     if request.method == 'POST':
         clase = ClaseSerializer(data=request.data)
         if clase.is_valid():
+            #Si es valido entonces creemos la clase en la base de datos
+            clase.save()
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=clase.errors)
-        # print("Aqui empieza el error"),
-        # Estudiante.objects.create(
-            # # print("Aqui empieza el error"),
-            # firstName = 'firstName' in request.POST,
-            # lastName ='firstName' in request.POST,
-            # email ='firstName' in request.POST,
-            # age ='firstName' in request.POST,
-            # idNumber ='firstName' in request.POST,
-            # city ='firstName' in request.POST,
-            # score ='firstName' in request.POST,
-            # approved ='firstName' in request.POST,
-            # desde aqui me acepta la solicitud pero me da puros errores false
-
-            # firstName=request.POST['firstName'],
-            # lastName=request.POST['lastName'],
-            # email=request.POST['email'],
-            # age=request.POST['age'],
-            # idNumber=request.POST['idNumber'],
-            # city=request.POST['city'],
-            # score=request.POST['score'],
-            # approved=request.POST['approved']
-
-        # )
-
-        return Response(status=status.HTTP_201_CREATED)
 
 
+@api_view(['GET', 'DELETE', 'PUT'])
+def clase(request, class_id):
 
-@api_view(['PUT'])
-def clase(request, id):
     try:
-        clase = Clase.objects.get(id=id)
+        clase = Clase.objects.get(id=class_id)
     except Clase.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'PUT':
-        print("identificandoErrs:Aqui surge un error al intentar obtener la data")
-        serializer = AllClases(clase, many=True, data=request.data)
-        #Sera un diccionario
-        data = {}
-        print("identificandoErrs:Aqui surge un error 2 al intentar obtener la data")
-        if serializer.is_valid():
-            serializer.save()
-            data["succes"] = "Se ha actualizado con exito"
-            #Retornamos la respuesta de la data
-            return Response(data=data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # if request.method == 'PUT':
+    #     try:
+    #         clase = Clase.objects.update(id=class_id)
+    #         serializer = ClaseSerializer(clase, data=request.data)
+    #         # context
+    #         data = {}
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             data["Actualizado!"] = "Se ha actualizado con  exito"
+    #             return Response(data=data)
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #     except Clase.DoesNotExist:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serialized = AllClasesSerializer(clase)
+        return Response(status=status.HTTP_200_OK, data=serialized.data)
+
+    if request.method == 'DELETE':
+        clase.delete()
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response({'No se ha podido eliminar la clase '}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 
-# @api_view(['DELETE'])
-# def clases(request, classId):
-#     try:
-#         clase = Clase.objects.get(id=classId)
-#     except Clase.DoesNotExist:
-#         return Response(status=status.HTTP_404_NOT_FOUND)
-#
-#     if request.method == 'DELETE':
-#         clase.delete()
-#     return Response({'Se ha borrado la clase con exito'}, {'clase': clase}, status=status.HTTP_200_OK)
 
-
-
-
-# en la vista es donde creo la funcion de la logica para visualizar los datos
-# def clases(request):
-#
-#     clases = Clase.objects.all()
-#                             #Ruta del archivo          datos a mostrar mediante js
-#     return render(request, 'clases/lista.html', {'clases': clases})
-
-def get_clases(request, id):
-
-    # studentsIn = Estudiante.objects.all().filter(id=id)
-    # studentsIn = Clase.estudiante.objects.filter(id=id
-    #Busco en el modelo clase el id
-    studentsIn = Estudiante.objects.filter(Clase=id)
-    for estudianteEn in studentsIn:
-        print(estudianteEn)
-    return render(request, 'clases/studentsIn.html', {'studentsIn': studentsIn})

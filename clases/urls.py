@@ -1,8 +1,12 @@
 from django.urls import path
-from clases.views import clases
+from clases.views import clases, clase
 
 urlpatterns = [
-    path('', clases)
+    path('', clases),
+    #Aqui le pasamos el parametro que estamos obteniendo en la vista
+    path('<class_id>/', clase),
+
+
 
 ]
 

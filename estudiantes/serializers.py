@@ -5,10 +5,7 @@ from estudiantes.models import Estudiante
 class EstudianteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estudiante
-        #fields son los datos que queremos mostrar en la peticion desde los views
-        fields = ('id', 'firstName', 'email', 'approved', 'age')
+        # fields = ('firstName', 'email', 'city')
+        # #fields son los datos que queremos mostrar en la peticion desde los views
+        fields = '__all__'
 
-    class AllStudentsSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Estudiante
-            fields = '__all__'

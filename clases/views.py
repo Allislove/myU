@@ -45,19 +45,20 @@ def clase(request, class_id):
     except Clase.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    # if request.method == 'PUT':
-    #     try:
-    #         clase = Clase.objects.update(id=class_id)
-    #         serializer = ClaseSerializer(clase, data=request.data)
-    #         # context
-    #         data = {}
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             data["Actualizado!"] = "Se ha actualizado con  exito"
-    #             return Response(data=data)
-    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #     except Clase.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'PUT':
+        try:
+            clase = Clase.objects.get(id=class_id)
+            #Cual es la instancia que va a editar
+            serializer = ClaseSerializer(instance=clase, data=request.data)
+            # context
+            data = {}
+            if serializer.is_valid():
+                serializer.save()
+                data["Actualizado!"] = "Se ha actualizado con  exito"
+                return Response(data=data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Clase.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serialized = AllClasesSerializer(clase)
